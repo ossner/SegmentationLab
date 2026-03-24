@@ -1,5 +1,5 @@
 import React from 'react';
-import { BlockMath, InlineMath } from 'react-katex';
+import { InlineMath } from 'react-katex';
 import katex from "katex";
 export interface MetricDefinitionRich {
     title: string;
