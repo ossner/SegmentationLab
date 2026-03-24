@@ -5,6 +5,7 @@ interface GridCanvasProps {
     gridSize: number;
     canvasSize: number;
     drawMode: DrawMode;
+    brushSize: number;
     clearTrigger: number;
     onUpdate: (gt: boolean[], pred: boolean[]) => void;
 }
@@ -13,23 +14,16 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
     gridSize,
     canvasSize,
     drawMode,
+    brushSize,
     clearTrigger,
     onUpdate,
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isDrawing, setIsDrawing] = useState(false);
+    const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
-    // We keep local references of the arrays to update the canvas instantly
     const gtRef = useRef<boolean[]>(new Array(gridSize * gridSize).fill(false));
     const predRef = useRef<boolean[]>(new Array(gridSize * gridSize).fill(false));
-
-    // Reset arrays if grid size changes
-    useEffect(() => {
-        gtRef.current = new Array(gridSize * gridSize).fill(false);
-        predRef.current = new Array(gridSize * gridSize).fill(false);
-        drawCanvas();
-        onUpdate(gtRef.current, predRef.current);
-    }, [gridSize, clearTrigger]);
 
     const drawCanvas = useCallback(() => {
         const canvas = canvasRef.current;
@@ -60,46 +54,78 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
 
             ctx.fillRect(x, y, cellSize, cellSize);
 
-            // Optional: Light grid lines for smaller grids
             if (gridSize <= 32) {
                 ctx.strokeStyle = '#e2e8f0';
                 ctx.strokeRect(x, y, cellSize, cellSize);
             }
         }
-    }, [gridSize, canvasSize]);
+        if (hoverIndex !== null) {
+            const hX = hoverIndex % gridSize;
+            const hY = Math.floor(hoverIndex / gridSize);
+            const offset = Math.floor(brushSize / 2);
 
-    const handleDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        if (!isDrawing) return;
+            ctx.strokeStyle = '#aaaaaa';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(
+                (hX - offset) * cellSize,
+                (hY - offset) * cellSize,
+                brushSize * cellSize,
+                brushSize * cellSize
+            );
+        }
+    }, [gridSize, canvasSize, hoverIndex, brushSize]);
 
+    useEffect(() => {
+        gtRef.current = new Array(gridSize * gridSize).fill(false);
+        predRef.current = new Array(gridSize * gridSize).fill(false);
+        onUpdate(gtRef.current, predRef.current);
+    }, [gridSize, clearTrigger]);
+
+    useEffect(() => {
+        drawCanvas();
+    }, [drawCanvas, hoverIndex, brushSize, clearTrigger]);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-
         const cellSize = canvasSize / gridSize;
-        const gridX = Math.floor(x / cellSize);
-        const gridY = Math.floor(y / cellSize);
+        const gX = Math.floor(x / cellSize);
+        const gY = Math.floor(y / cellSize);
 
-        if (gridX >= 0 && gridX < gridSize && gridY >= 0 && gridY < gridSize) {
-            const index = gridY * gridSize + gridX;
-
-            let changed = false;
-            if (drawMode === 'gt' && !gtRef.current[index]) {
-                gtRef.current[index] = true;
-                changed = true;
-            } else if (drawMode === 'pred' && !predRef.current[index]) {
-                predRef.current[index] = true;
-                changed = true;
-            } else if (drawMode === 'erase' && (gtRef.current[index] || predRef.current[index])) {
-                gtRef.current[index] = false;
-                predRef.current[index] = false;
-                changed = true;
-            }
-
-            if (changed) drawCanvas();
+        if (gX >= 0 && gX < gridSize && gY >= 0 && gY < gridSize) {
+            const index = gY * gridSize + gX;
+            setHoverIndex(index);
+            if (isDrawing) applyBrush(gX, gY);
+        } else {
+            setHoverIndex(null);
         }
+    };
+
+    const applyBrush = (centerX: number, centerY: number) => {
+        const offset = Math.floor(brushSize / 2);
+        let changed = false;
+
+        for (let dx = -offset; dx < brushSize - offset; dx++) {
+            for (let dy = -offset; dy < brushSize - offset; dy++) {
+                const nx = centerX + dx;
+                const ny = centerY + dy;
+
+                if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize) {
+                    const index = ny * gridSize + nx;
+                    if (drawMode === 'gt') { gtRef.current[index] = true; changed = true; }
+                    else if (drawMode === 'pred') { predRef.current[index] = true; changed = true; }
+                    else if (drawMode === 'erase') {
+                        gtRef.current[index] = false;
+                        predRef.current[index] = false;
+                        changed = true;
+                    }
+                }
+            }
+        }
+        if (changed) drawCanvas();
     };
 
     return (
@@ -107,15 +133,11 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
             ref={canvasRef}
             width={canvasSize}
             height={canvasSize}
-            style={{ cursor: 'crosshair', border: '1px solid #cbd5e1' }}
-            onMouseDown={(e) => { setIsDrawing(true); handleDraw(e); }}
-            onMouseMove={handleDraw}
-            onMouseUp={() => {
-                setIsDrawing(false);
-                // Lift state up only when stroke finishes to prevent React render lag
-                onUpdate([...gtRef.current], [...predRef.current]);
-            }}
-            onMouseLeave={() => setIsDrawing(false)}
+            style={{ cursor: 'none', border: '2px solid #cbd5e1', borderRadius: '4px', display: 'block' }}
+            onMouseMove={handleMouseMove}
+            onMouseDown={(e) => { setIsDrawing(true); handleMouseMove(e); }}
+            onMouseUp={() => { setIsDrawing(false); onUpdate([...gtRef.current], [...predRef.current]); }}
+            onMouseLeave={() => { setIsDrawing(false); setHoverIndex(null); }}
         />
     );
 };

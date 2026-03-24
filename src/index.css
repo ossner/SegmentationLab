@@ -17,9 +17,7 @@
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
   color: var(--text);
-  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -57,9 +55,13 @@
   touch-action: manipulation;
 }
 
-.pred-button:hover,
+.pred-button:hover {
+  background-color: #ff5454;
+}
 .pred-button:focus {
-  background-color: #ef4444;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border-style: 1;
 }
 
 .gt-button {
@@ -89,9 +91,11 @@
   touch-action: manipulation;
 }
 
-.gt-button:hover,
+.gt-button:hover {
+  background-color: #4b92f6;
+}
 .gt-button:focus {
-  background-color: #3b82f6;
+  background-color: #ffffff;
 }
 
 .erase-button {
@@ -122,11 +126,12 @@
   touch-action: manipulation;
 }
 
-.erase-button:hover,
-.erase-button:focus {
-  background-color: #f8fafc;
+.gt-button:hover {
+  background-color: #4b92f6;
 }
-
+.gt-button:focus {
+  background-color: #ffffff;
+}
 
 #root {
   width: 1126px;

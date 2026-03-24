@@ -1,5 +1,4 @@
-// types.ts
-export type DrawMode = 'gt' | 'pred' | 'erase' | 'clear';
+export type DrawMode = 'gt' | 'pred' | 'erase';
 
 export interface GridState {
   gt: boolean[];

@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import type {
-    MetricData
-} from './metrics';
 import {
     SEGMENTATION_METRICS
 } from './metrics';
@@ -10,9 +7,10 @@ import { MetricItem } from './MetricItem';
 interface MetricsPanelProps {
     gt: boolean[];
     pred: boolean[];
+    onShowInfo: (id: string) => void;
 }
 
-export const MetricsPanel: React.FC<MetricsPanelProps> = ({ gt, pred }) => {
+export const MetricsPanel: React.FC<MetricsPanelProps> = ({ gt, pred, onShowInfo }) => {
     const [pinnedIds, setPinnedIds] = useState<Set<string>>(new Set(['dice', 'iou']));
 
     const togglePin = (id: string) => {
@@ -27,40 +25,29 @@ export const MetricsPanel: React.FC<MetricsPanelProps> = ({ gt, pred }) => {
         });
     };
 
-    const data: MetricData = { gt, pred };
-
-    // Separate metrics into pinned and unpinned arrays
+    const data = { gt, pred };
     const pinnedMetrics = SEGMENTATION_METRICS.filter(m => pinnedIds.has(m.id));
     const unpinnedMetrics = SEGMENTATION_METRICS.filter(m => !pinnedIds.has(m.id));
 
+    const renderItem = (metric: any, pinned: boolean) => (
+        <MetricItem
+            key={metric.id}
+            metric={metric}
+            data={data}
+            isPinned={pinned}
+            onTogglePin={togglePin}
+            onShowInfo={onShowInfo}
+        />
+    );
+
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minWidth: '350px' }}>
-
-            <h3 style={{ borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem', marginTop: 0 }}>
-                Evaluation Metrics
-            </h3>
-
-            <div style={{ flex: 1, overflowY: 'auto', paddingRight: '10px' }}>
-                {pinnedMetrics.length > 0 && (
-                    <div style={{ marginBottom: '2rem' }}>
-                        <h4 style={{ color: '#64748b', fontSize: '0.875rem', textTransform: 'uppercase', position: 'sticky', top: 0, backgroundColor: 'white' }}>
-                            Pinned
-                        </h4>
-                        {pinnedMetrics.map(metric => (
-                            <MetricItem key={`pinned-${metric.id}`} metric={metric} data={data} isPinned={true} onTogglePin={togglePin} />
-                        ))}
-                    </div>
-                )}
-
-                <div>
-                    <h4 style={{ color: '#64748b', fontSize: '0.875rem', textTransform: 'uppercase', position: 'sticky', top: 0, backgroundColor: 'white' }}>
-                        All Metrics
-                    </h4>
-                    {unpinnedMetrics.map(metric => (
-                        <MetricItem key={`unpinned-${metric.id}`} metric={metric} data={data} isPinned={false} onTogglePin={togglePin} />
-                    ))}
-                </div>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <h3 style={{ borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem' }}>Metrics</h3>
+            <div style={{ flex: 1, overflowY: 'auto' }}>
+                {pinnedMetrics.map(m => renderItem(m, true))}
+                <hr style={{ border: 'none', borderTop: '1px solid #f1f5f9', margin: '1rem 0' }} />
+                {unpinnedMetrics.map(m => renderItem(m, false))}
             </div>
-
-        </div>);
+        </div>
+    );
 };
