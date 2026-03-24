@@ -281,7 +281,7 @@ export const METRIC_RICH_CONTENT: Record<string, MetricDefinitionRich> = {
                 </p>
                 <p>
                     Accuracy measures what percentage of the image the model "gets right" which includes background pixels being predicted correctly.
-                    Since many segmentation tasks (especially in the medical domain) have an overwhelming share of background compared to foreground, accuracy might be very high if the prediction contains no pixels.
+                    Since many segmentation tasks (especially in the medical domain) have an overwhelming share of background compared to foreground, accuracy might be very high if the prediction contains nothing.
                 </p>
 
                 <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
@@ -299,19 +299,27 @@ export const METRIC_RICH_CONTENT: Record<string, MetricDefinitionRich> = {
                         }} />
                         <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
                             {/* Numerator */}
-                            <div
-                                style={{
-                                    width: '30px',
-                                    height: '40px',
-                                    background: '#22c55e',
-                                    color: 'white',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontSize: '0.8rem',
-                                    borderRadius: '4px'
-                                }}
-                            ></div>
+                            
+                            <div style={{ display: 'flex' }}>
+                                <div
+                                    style={{
+                                        width: '30px',
+                                        height: '40px',
+                                        background: '#22c55e',
+                                        borderTopLeftRadius: '4px',
+                                        borderBottomLeftRadius: '4px'
+                                    }}
+                                ></div>
+                                <div
+                                    style={{
+                                        width: '30px',
+                                        height: '40px',
+                                        background: '#ef4444',
+                                        borderTopRightRadius: '4px',
+                                        borderBottomRightRadius: '4px'
+                                    }}
+                                ></div>
+                            </div>
 
                             {/* Fraction bar */}
                             <div style={{ width: '100%', height: '2px', background: '#334155', margin: '4px 0' }} />

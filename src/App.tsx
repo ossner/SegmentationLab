@@ -33,7 +33,7 @@ const ToolButton: React.FC<ToolButtonProps> = ({ label, color, active, onClick }
 export const App: React.FC = () => {
     const [gridSize, setGridSize] = useState<number>(32);
     const [brushSize, setBrushSize] = useState<number>(2);
-    const [drawMode, setDrawMode] = useState<DrawMode>('pred');
+    const [drawMode, setDrawMode] = useState<DrawMode>('gt');
     const [gtData, setGtData] = useState<boolean[]>([]);
     const [predData, setPredData] = useState<boolean[]>([]);
     const [clearTrigger, setClearTrigger] = useState<number>(0);
