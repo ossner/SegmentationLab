@@ -16,12 +16,12 @@ export const METRIC_RICH_CONTENT: Record<string, MetricDefinitionRich> = {
                     The Dice Coefficient <InlineMath math="DSC" /> is a statistical tool used to gauge the similarity of two samples. In image segmentation, it measures the overlap between the segmented mask (<InlineMath math="X" />) and the ground truth (<InlineMath math="Y" />).
                 </p>
 
-                <BlockMath math="DSC = \frac{2 |X \cap Y|}{|X| + |Y|}" />
+                <BlockMath math="DSC = \\frac{2 |X \\cap Y|}{|X| + |Y|}" />
 
                 <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                     <h4>Confusion Matrix Formula</h4>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '3em' }}>
-                        <BlockMath math="DSC = \frac{2*TP}{2*TP + FP + FN}" />
+                        <BlockMath math="DSC = \\frac{2*TP}{2*TP + FP + FN}" />
 
                         <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
                             {/* Numerator */}
