@@ -28,8 +28,16 @@ export const METRIC_RICH_CONTENT: Record<string, MetricDefinitionRich> = {
                 <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                     <h4>Confusion Matrix Formula</h4>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '3em' }}>
-                        <BlockMath math={String.raw`DSC = \frac{2*TP}{2*TP + FP + FN}`} />
-
+                        <div dangerouslySetInnerHTML={{
+                            __html: katex.renderToString(
+                                String.raw`DSC = \frac{2*TP}{2*TP + FP + FN}`,
+                                {
+                                    throwOnError: false,
+                                    strict: "ignore",
+                                    displayMode: true,
+                                }
+                            )
+                        }} />
                         <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
                             {/* Numerator */}
                             <div
@@ -97,13 +105,29 @@ export const METRIC_RICH_CONTENT: Record<string, MetricDefinitionRich> = {
                     The IoU <InlineMath math="IoU" /> is the standard metric for object detection and semantic segmentation challenges. It calculates the ratio of the intersection area to the union area of the two masks.
                 </p>
 
-                <BlockMath math={String.raw`IoU = \frac{\text{Area of Overlap}}{\text{Area of Union}} = \frac{|X \cap Y|}{|X \cup Y|}`} />
-
+                <div dangerouslySetInnerHTML={{
+                    __html: katex.renderToString(
+                        String.raw`IoU = \frac{\text{Area of Overlap}}{\text{Area of Union}} = \frac{|X \cap Y|}{|X \cup Y|}`,
+                        {
+                            throwOnError: false,
+                            strict: "ignore",
+                            displayMode: true,
+                        }
+                    )
+                }} />
                 <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                     <h4>Confusion Matrix Formula</h4>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '3em' }}>
-                        <BlockMath math={String.raw`IoU = \frac{TP}{TP + FP + FN}`} />
-
+                        <div dangerouslySetInnerHTML={{
+                            __html: katex.renderToString(
+                                String.raw`IoU = \frac{TP}{TP + FP + FN}`,
+                                {
+                                    throwOnError: false,
+                                    strict: "ignore",
+                                    displayMode: true,
+                                }
+                            )
+                        }} />
                         <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
                             {/* Numerator */}
                             <div
