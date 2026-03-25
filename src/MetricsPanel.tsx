@@ -42,7 +42,7 @@ export const MetricsPanel: React.FC<MetricsPanelProps> = ({ gt, pred, onShowInfo
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <h3 style={{ borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem' }}>Metrics</h3>
+            <h3 style={{ margin: '0rem', marginBottom: '1rem', fontSize: '1.5rem', borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem' }}>Metrics</h3>
             <div style={{ flex: 1, overflowY: 'auto' }}>
                 {pinnedMetrics.map(m => renderItem(m, true))}
                 <hr style={{ border: 'none', borderTop: '1px solid #f1f5f9', margin: '1rem 0' }} />

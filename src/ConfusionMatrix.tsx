@@ -44,8 +44,7 @@ export const ConfusionMatrix: React.FC<ConfusionMatrixProps> = ({ gt, pred }) =>
 
   return (
     <div style={{ marginTop: '0rem', marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <h2 style={{ marginBottom: '1rem', marginTop: '0rem', color: '#475569' }}>Confusion Matrix</h2>
-      
+      <h1 style={{ margin: '0rem', marginBottom: '1rem', fontSize: '1.5rem' }}>Confusion Matrix</h1>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1fr', gap: '10px', alignItems: 'center' }}>
         {/* Empty corner */}
         <div></div>

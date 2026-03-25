@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { GridCanvas } from './GridCanvas';
 import type { DrawMode } from './types';
 import { MetricsPanel } from './MetricsPanel';
@@ -7,6 +7,8 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import 'katex/dist/katex.min.css';
 import { InfoModal } from './InfoModal';
 import { METRIC_RICH_CONTENT } from './metricLibrary';
+import { findInstances } from './utils/connectedcomponents';
+import { InstanceTable } from './InstanceTable';
 
 interface ToolButtonProps {
     label: string;
@@ -39,14 +41,20 @@ export const App: React.FC = () => {
     const [clearTrigger, setClearTrigger] = useState<number>(0);
     const [activeModalMetricId, setActiveModalMetricId] = useState<string | null>(null);
     const [persistedId, setPersistedId] = useState<string | null>(null);
+    const [activeHighlightMask, setActiveHighlightMask] = useState<boolean[]>([]);
+    const handleOpenModal = (id: string) => setActiveModalMetricId(id);
+    const handleCloseModal = () => setActiveModalMetricId(null);
+    const modalData = persistedId ? METRIC_RICH_CONTENT[persistedId] : null;
+
+    const gtInstances = useMemo(() =>
+        findInstances(gtData, gridSize, predData),
+        [gtData, gridSize, predData]);
     useEffect(() => {
         if (activeModalMetricId) {
             setPersistedId(activeModalMetricId);
         }
     }, [activeModalMetricId]);
-    const handleOpenModal = (id: string) => setActiveModalMetricId(id);
-    const handleCloseModal = () => setActiveModalMetricId(null);
-    const modalData = persistedId ? METRIC_RICH_CONTENT[persistedId] : null;
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <div style={{ display: 'flex', gap: '3rem', padding: '1rem', flex: '0 0 auto' }}>
@@ -54,7 +62,7 @@ export const App: React.FC = () => {
                 {/* Top Left */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     <header>
-                        <h1 style={{ margin: '0rem', fontSize: '1.5rem' }}>Segmentation Lab <img src='/favicon.svg' style={{width: '7%', marginTop:'0px', marginBottom: '-2px'}}></img></h1>
+                        <h1 style={{ margin: '0rem', fontSize: '1.5rem' }}>Segmentation Lab <img src='/favicon.svg' style={{ width: '7%', marginTop: '0px', marginBottom: '-2px' }}></img></h1>
                     </header>
 
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', background: '#ffffff', padding: '0rem', borderRadius: '8px' }}>
@@ -86,6 +94,7 @@ export const App: React.FC = () => {
                         drawMode={drawMode}
                         brushSize={brushSize}
                         clearTrigger={clearTrigger}
+                        activeHighlightMask={activeHighlightMask}
                         onUpdate={(gt, pred) => { setGtData(gt); setPredData(pred); }}
                     />
                 </div>
@@ -96,21 +105,23 @@ export const App: React.FC = () => {
                 </div>
             </div>
             <div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', padding: '0 2rem 2rem 3rem' }}>
+                <div style={{ display: 'grid', borderTop: '1px solid #e2e8f0', gridTemplateColumns: '1fr 1fr', gap: '2rem', padding: '1rem 1rem 1rem 1rem' }}>
                     {/* Bottom Left */}
                     <ConfusionMatrix gt={gtData} pred={predData} />
 
                     {/* Bottom Right */}
-                    <section style={{ backgroundColor: '#ffffff', padding: '0rem 0' }}>
-                        Not sure what will go in this corner yet...
-                        Perhaps instance information? Perhaps nothing?
+                    <section style={{ height: '350px' }}>
+                        <InstanceTable
+                            instances={gtInstances}
+                            onHoverInstance={(mask) => setActiveHighlightMask(mask)} />
                     </section>
 
                 </div>
             </div>
             <article style={{ padding: '1rem 2rem', background: '#ffffff', borderTop: '1px solid #e2e8f0', flex: 1 }}>
                 <div style={{ maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
-                    <h2>Metric Deep-Dive</h2>
+                    <h1 style={{ margin: '0rem', fontSize: '1.5rem' }}>Segmentation is Hard </h1>
+
                     <p>Lorem Ipsum etc. etc.</p>
                 </div>
             </article>

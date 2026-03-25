@@ -7,6 +7,7 @@ interface GridCanvasProps {
     drawMode: DrawMode;
     brushSize: number;
     clearTrigger: number;
+    activeHighlightMask: boolean[],
     onUpdate: (gt: boolean[], pred: boolean[]) => void;
 }
 
@@ -16,6 +17,7 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
     drawMode,
     brushSize,
     clearTrigger,
+    activeHighlightMask,
     onUpdate,
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -41,6 +43,7 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
 
             const isGt = gtRef.current[i];
             const isPred = predRef.current[i];
+            const isHighlighted = activeHighlightMask[i];
 
             if (isGt && isPred) {
                 ctx.fillStyle = '#22c55e'; // Green (Intersection / TP)
@@ -52,10 +55,16 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
                 ctx.fillStyle = '#f8fafc'; // Default empty
             }
 
+            if (isHighlighted) {
+                ctx.fillStyle += '77';
+                ctx.strokeRect(x, y, cellSize, cellSize);
+            }
+
             ctx.fillRect(x, y, cellSize, cellSize);
 
             if (gridSize <= 32) {
                 ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 2;
                 ctx.strokeRect(x, y, cellSize, cellSize);
             }
         }
@@ -65,15 +74,17 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
             const offset = Math.floor(brushSize / 2);
 
             ctx.strokeStyle = '#aaaaaa';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 0;
             ctx.strokeRect(
                 (hX - offset) * cellSize,
                 (hY - offset) * cellSize,
                 brushSize * cellSize,
                 brushSize * cellSize
             );
+        } else {
+            ctx.strokeStyle = '#aaaaaa';
         }
-    }, [gridSize, canvasSize, hoverIndex, brushSize]);
+    }, [gridSize, canvasSize, hoverIndex, brushSize, activeHighlightMask]);
 
     useEffect(() => {
         gtRef.current = new Array(gridSize * gridSize).fill(false);
