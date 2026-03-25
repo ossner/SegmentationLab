@@ -7,7 +7,7 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import 'katex/dist/katex.min.css';
 import { InfoModal } from './InfoModal';
 import { METRIC_RICH_CONTENT } from './metricLibrary';
-import { findInstances } from './utils/connectedcomponents';
+import { findInstances } from './utils/connectedComponents.ts';
 import { InstanceTable } from './InstanceTable';
 
 interface ToolButtonProps {
