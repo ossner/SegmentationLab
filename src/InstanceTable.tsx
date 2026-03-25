@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Instance } from './utils/connectedcomponents';
+import type { Instance } from './utils/connectedComponents.ts';
 
 interface InstanceTableProps {
     instances: Instance[];
