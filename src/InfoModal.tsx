@@ -6,7 +6,7 @@ Modal.setAppElement('#root');
 interface InfoModalProps {
     isOpen: boolean;
     onClose: () => void;
-    title: string;
+    title: React.ReactNode;
     children: React.ReactNode;
 }
 
