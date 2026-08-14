@@ -9,6 +9,7 @@ import { InfoModal } from './InfoModal';
 import { METRIC_RICH_CONTENT } from './metricLibrary';
 import { findInstances } from './utils/connectedComponents.ts';
 import { InstanceTable } from './InstanceTable';
+import translate from "/translate.png"
 
 interface ToolButtonProps {
     label: string;
@@ -16,6 +17,111 @@ interface ToolButtonProps {
     active: boolean;
     onClick: () => void;
 }
+
+const MobileUnsupported: React.FC = () => {
+    return (
+        <div
+            style={{
+                minHeight: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2rem',
+                boxSizing: 'border-box',
+                backgroundColor: '#f8f9fa',
+                color: '#212529',
+                fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                textAlign: 'center',
+            }}
+        >
+            <div style={{ maxWidth: '520px' }}>
+                <h1
+                    style={{
+                        fontSize: '2rem',
+                        marginBottom: '3rem',
+                    }}
+                >
+                    <h1 style={{ margin: '0rem', fontSize: '2rem' }}>Segmentation Lab <img src='/favicon.svg' style={{ width: '8%', marginTop: '0px', marginBottom: '-4px' }}></img></h1>
+                </h1>
+                <img src={translate} width={"85%"}></img>
+                <p
+                    style={{
+                        fontSize: '1.1rem',
+                        color: '#6c757d',
+                        lineHeight: 1.6,
+                        marginBottom: '0.75rem',
+                    }}
+                >
+                    This experience is designed for desktop and laptop
+                    computers.
+                    <br></br>
+                    <br></br>
+                    The interactive canvas requires mouse or trackpad input
+                    and is not supported on mobile devices.
+                    <br></br>
+                    <br></br>
+                    Please open this site on a desktop or laptop to continue.
+                </p>
+                <footer className="border-t border-gray-200 py-10 px-4 mt-20">
+                    <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+
+                        <p className="text-gray-500 text-sm font-medium">
+                            © {new Date().getFullYear()} Sebastian Oßner
+                        </p>
+
+                        <div className="flex items-center gap-5">
+                            <a
+                                href="https://github.com/ossner"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="GitHub"
+                                className="text-gray-400 hover:text-black transition-all duration-300"
+                            >
+                                <FaGithub size={24} />
+                            </a>
+                            <a
+                                href="https://linkedin.com/in/ossner"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="LinkedIn"
+                                className="text-gray-400 hover:text-[#0077b5] transition-all duration-300"
+                            >
+                                <FaLinkedin size={24} />
+                            </a>
+                        </div>
+
+                    </div>
+                </footer>
+            </div>
+
+        </div>
+    );
+};
+
+
+const useDesktopOnly = (): boolean | null => {
+    const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia(
+            '(pointer: fine) and (hover: hover)'
+        );
+
+        const update = () => {
+            setIsDesktop(mediaQuery.matches);
+        };
+
+        update();
+
+        mediaQuery.addEventListener('change', update);
+
+        return () => {
+            mediaQuery.removeEventListener('change', update);
+        };
+    }, []);
+
+    return isDesktop;
+};
 
 const ToolButton: React.FC<ToolButtonProps> = ({ label, color, active, onClick }) => {
     const style: React.CSSProperties = {
@@ -33,6 +139,8 @@ const ToolButton: React.FC<ToolButtonProps> = ({ label, color, active, onClick }
 };
 
 export const App: React.FC = () => {
+    const isDesktop = useDesktopOnly();
+
     const [gridSize, setGridSize] = useState<number>(32);
     const [brushSize, setBrushSize] = useState<number>(2);
     const [drawMode, setDrawMode] = useState<DrawMode>('gt');
@@ -54,6 +162,16 @@ export const App: React.FC = () => {
             setPersistedId(activeModalMetricId);
         }
     }, [activeModalMetricId]);
+
+    if (isDesktop === null) {
+        return null;
+    }
+
+    // Mobile / touch-oriented devices
+    if (!isDesktop) {
+        return <MobileUnsupported />;
+    }
+
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
