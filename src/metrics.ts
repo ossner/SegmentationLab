@@ -41,7 +41,7 @@ export const SEGMENTATION_METRICS: MetricDefinition[] = [
   },
   {
     id: 'precision',
-    name: 'Precision (Specificity/PPV)',
+    name: 'Precision (PPV)',
     calculate: ({ gt, pred }) => {
       const { tp, fp } = getConfusionMatrix(gt, pred);
       if (tp + fp === 0) return 0.0;
@@ -57,35 +57,35 @@ export const SEGMENTATION_METRICS: MetricDefinition[] = [
       return tp / (tp + fn);
     }
   },
-  {
-    id: 'f2',
-    name: 'F2 Score',
-    calculate: ({ gt, pred }) => {
-      const { tp, fp, fn } = getConfusionMatrix(gt, pred);
-      if (tp + fp + fn === 0) return 1.0;
-      return (5 * tp) / (5 * tp + 4 * fn + fp);
-    }
-  },
-  {
-    id: 'f05',
-    name: 'F0.5 Score',
-    calculate: ({ gt, pred }) => {
-      const { tp, fp, fn } = getConfusionMatrix(gt, pred);
-      if (tp + fp + fn === 0) return 1.0;
-      return (1.25 * tp) / (1.25 * tp + 0.25 * fn + fp);
-    }
-  },
-  {
-    id: 'tversky',
-    name: 'Tversky Index (\u03B1=0.3, \u03B2=0.7)',
-    calculate: ({ gt, pred }) => {
-      const { tp, fp, fn } = getConfusionMatrix(gt, pred);
-      const alpha = 0.3; // Weight of False Positives
-      const beta = 0.7;  // Weight of False Negatives
-      if (tp + fp + fn === 0) return 1.0;
-      return tp / (tp + alpha * fp + beta * fn);
-    }
-  },
+//   {
+//     id: 'f2',
+//     name: 'F2 Score',
+//     calculate: ({ gt, pred }) => {
+//       const { tp, fp, fn } = getConfusionMatrix(gt, pred);
+//       if (tp + fp + fn === 0) return 1.0;
+//       return (5 * tp) / (5 * tp + 4 * fn + fp);
+//     }
+//   },
+//   {
+//     id: 'f05',
+//     name: 'F0.5 Score',
+//     calculate: ({ gt, pred }) => {
+//       const { tp, fp, fn } = getConfusionMatrix(gt, pred);
+//       if (tp + fp + fn === 0) return 1.0;
+//       return (1.25 * tp) / (1.25 * tp + 0.25 * fn + fp);
+//     }
+//   },
+//   {
+//     id: 'tversky',
+//     name: 'Tversky Index (\u03B1=0.3, \u03B2=0.7)',
+//     calculate: ({ gt, pred }) => {
+//       const { tp, fp, fn } = getConfusionMatrix(gt, pred);
+//       const alpha = 0.3; // Weight of False Positives
+//       const beta = 0.7;  // Weight of False Negatives
+//       if (tp + fp + fn === 0) return 1.0;
+//       return tp / (tp + alpha * fp + beta * fn);
+//     }
+//   },
   {
     id: 'ce',
     name: 'Binary Cross-Entropy',
