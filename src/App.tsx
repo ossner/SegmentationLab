@@ -62,7 +62,7 @@ export const App: React.FC = () => {
                 {/* Top Left */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     <header>
-                        <h1 style={{ margin: '0rem', fontSize: '1.5rem' }}>Segmentation Lab <img src='/favicon.svg' style={{ width: '7%', marginTop: '0px', marginBottom: '-2px' }}></img></h1>
+                        <h1 style={{ margin: '0rem', fontSize: '1.5rem' }}>Segmentation Lab <img src='/favicon.svg' style={{ width: '8%', marginTop: '0px', marginBottom: '-4px' }}></img></h1>
                     </header>
 
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', background: '#ffffff', padding: '0rem', borderRadius: '8px' }}>
@@ -118,13 +118,6 @@ export const App: React.FC = () => {
 
                 </div>
             </div>
-            <article style={{ padding: '1rem 2rem', background: '#ffffff', borderTop: '1px solid #e2e8f0', flex: 1 }}>
-                <div style={{ maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
-                    <h1 style={{ margin: '0rem', fontSize: '1.5rem' }}>Segmentation is Hard </h1>
-
-                    <p>Lorem Ipsum etc. etc.</p>
-                </div>
-            </article>
             <footer className="border-t border-gray-200 py-10 px-4 mt-20">
                 <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
 
